@@ -1,0 +1,14 @@
+{
+  "name": "@tipjar/server",
+  "version": "0.1.0",
+  "description": "TipJar embed server",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo \"(lint not configured yet)\"",
+    "dev": "tsc -w -p tsconfig.json"
+  }
+}

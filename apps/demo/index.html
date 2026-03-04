@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TipJar demo</title>
+    <style>
+      body { font-family: system-ui, sans-serif; max-width: 720px; margin: 4rem auto; padding: 0 1rem; }
+      h1 { margin-bottom: 0.25rem; }
+      p.lead { color: #555; margin-top: 0; }
+      .placeholder { padding: 2rem; border: 1px dashed #ccc; border-radius: 12px; margin-top: 2rem; }
+    </style>
+  </head>
+  <body>
+    <h1>TipJar demo</h1>
+    <p class="lead">A creator's tip jar, powered by USDC on Stellar.</p>
+
+    <div class="placeholder">
+      <tip-jar to="GABCDEF...XYZ" suggested="1,5,20"></tip-jar>
+    </div>
+
+    <script type="module" src="/widget.js"></script>
+  </body>
+</html>

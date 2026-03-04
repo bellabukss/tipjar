@@ -1,0 +1,22 @@
+{
+  "name": "@tipjar/widget",
+  "version": "0.1.0",
+  "description": "Embeddable tipping widget for the Stellar network",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo \"(lint not configured yet)\"",
+    "dev": "tsc -w -p tsconfig.json"
+  }
+}
