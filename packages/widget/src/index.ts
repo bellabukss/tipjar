@@ -35,3 +35,10 @@ export function mount(target: string | HTMLElement, options: MountOptions): TipJ
 }
 
 export { TipJarElement };
+
+export function disconnect(target: string | HTMLElement): void {
+  const host = typeof target === 'string' ? document.querySelector(target) : target;
+  if (!host) return;
+  const el = host.querySelector('tip-jar');
+  if (el) el.remove();
+}
