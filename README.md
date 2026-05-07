@@ -2,9 +2,6 @@
 
 > One-tap tipping for creators. Your fans send a few cents or a few dollars in USDC, and you keep almost all of it.
 
-[![npm](https://img.shields.io/npm/v/@tipjar/widget.svg)](https://www.npmjs.com/package/@tipjar/widget)
-[![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-
 TipJar is a drop-in tipping widget you paste into a blog post, a Twitch panel, a Substack, or your About page. Fans tip in USDC over the Stellar network — fees are fractions of a cent, settlement is around 5 seconds, and you don't need a Stripe account, a Ko-fi page, or a Patreon tier ladder.
 
 ## Why this exists
