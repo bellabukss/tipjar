@@ -16,7 +16,11 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit",
-    "lint": "echo \"(lint not configured yet)\"",
+    "lint": "eslint src/ --ext .ts",
     "dev": "tsc -w -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.57.0"
   }
 }
