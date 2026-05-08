@@ -12,8 +12,8 @@ export default defineConfig({
         entryFileNames: 'widget.js',
       },
     },
-    outDir: '../../apps/demo',
-    emptyOutDir: false,
+    outDir: 'dist',
+    emptyOutDir: true,
     minify: true,
   },
 });
