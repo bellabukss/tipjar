@@ -12,13 +12,15 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "vite build",
     "typecheck": "tsc --noEmit",
-    "lint": "echo "(lint not configured yet)"",
+    "lint": "echo 'lint not configured yet'",
     "dev": "vite build --watch",
-    "test": "echo "(tests not configured yet)""
+    "test": "echo 'tests not configured yet'"
   },
   "dependencies": {
     "@stellar/freighter-api": "^3.0.0",
