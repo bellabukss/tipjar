@@ -1,4 +1,5 @@
 {
-  "buildCommand": "",
+  "installCommand": "pnpm install",
+  "buildCommand": "pnpm --filter @tipjar/widget build",
   "outputDirectory": "apps/demo"
 }
