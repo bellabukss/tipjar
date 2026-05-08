@@ -5,10 +5,6 @@
   "description": "One-tap tipping for creators on Stellar",
   "license": "MIT",
   "packageManager": "pnpm@9.15.4",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "engines": {
     "node": ">=20"
   },
