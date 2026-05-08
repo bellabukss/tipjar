@@ -16,6 +16,15 @@ export interface TipReceipt {
   memo?: string;
 }
 
+/**
+ * Mounts a TipJar widget into the specified DOM target.
+ *
+ * @param target - A CSS selector string or an existing `HTMLElement` to attach the widget to.
+ * @param options - Configuration options including recipient address, suggested tip amounts,
+ *   asset type, message toggle, visual theme, and an optional tip callback.
+ * @returns The mounted {@link TipJarElement} custom element instance.
+ * @throws {Error} If `target` is a selector string that does not match any element in the DOM.
+ */
 export function mount(target: string | HTMLElement, options: MountOptions): TipJarElement {
   const host = typeof target === 'string' ? document.querySelector(target) : target;
   if (!host) {
