@@ -5,9 +5,16 @@
   "description": "Static demo page for the TipJar widget",
   "license": "MIT",
   "scripts": {
-    "build": "echo \"(static demo, no build step)\"",
-    "typecheck": "echo \"(no TS in demo)\"",
-    "lint": "echo \"(no lint in demo)\"",
-    "dev": "echo \"open index.html in a browser\""
+    "build": "rm -rf _widget && cp -r ../../packages/widget/src ./_widget && vite build && cp index.html dist/",
+    "typecheck": "echo 'no TS in demo'",
+    "lint": "echo 'no lint in demo'",
+    "dev": "echo 'open index.html in a browser'"
+  },
+  "dependencies": {
+    "@stellar/freighter-api": "^3.0.0",
+    "@stellar/stellar-sdk": "^12.0.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
   }
 }
