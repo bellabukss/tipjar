@@ -28,7 +28,8 @@ export async function connectFreighter(): Promise<WalletState> {
   const network: 'testnet' | 'public' =
     net.networkPassphrase === Networks.PUBLIC ? 'public' : 'testnet';
 
-  return { publicKey: access.publicKey, network };
+  // freighter-api v3 returns `address` (was `publicKey` in v1/v2)
+  return { publicKey: (access as unknown as { address: string }).address, network };
 }
 
 export async function signWithFreighter(
