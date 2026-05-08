@@ -253,8 +253,9 @@ export class TipJarElement extends HTMLElement {
 
       // Fire attribute-based callback (HTML attribute API)
       const callbackName = this.getAttribute('onTip');
-      if (callbackName && typeof (window as Record<string, unknown>)[callbackName] === 'function') {
-        (window as Record<string, unknown>)[callbackName] = receipt;
+      const win = window as unknown as Record<string, unknown>;
+      if (callbackName && typeof win[callbackName] === 'function') {
+        (win[callbackName] as (r: TipReceipt) => void)(receipt);
       }
 
       this.setState({ type: 'success', txHash, amount, asset });
