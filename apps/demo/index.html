@@ -1,24 +1,597 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>TipJar demo</title>
-    <style>
-      body { font-family: system-ui, sans-serif; max-width: 720px; margin: 4rem auto; padding: 0 1rem; }
-      h1 { margin-bottom: 0.25rem; }
-      p.lead { color: #555; margin-top: 0; }
-      .placeholder { padding: 2rem; border: 1px dashed #ccc; border-radius: 12px; margin-top: 2rem; }
-    </style>
-  </head>
-  <body>
-    <h1>TipJar demo</h1>
-    <p class="lead">A creator's tip jar, powered by USDC on Stellar.</p>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TipJar - One-tap tips for creators on Stellar</title>
+  <meta name="description" content="Add a tip jar to your site in two lines of HTML. Fans pay in USDC directly to your Stellar wallet. No accounts, no fees, no friction." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <div class="placeholder">
-      <tip-jar to="GABCDEF...XYZ" suggested="1,5,20"></tip-jar>
+    :root {
+      --bg: #faf9ff;
+      --white: #ffffff;
+      --violet: #7c3aed;
+      --violet-light: #ede9fe;
+      --violet-dark: #5b21b6;
+      --amber: #f59e0b;
+      --amber-light: #fef3c7;
+      --text: #1c1917;
+      --muted: #78716c;
+      --border: #e7e5e4;
+      --radius: 16px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+    }
+
+    /* ---- Nav ---- */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--white);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--violet);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--violet);
+      color: var(--white);
+      border: none;
+      padding: 0.6rem 1.4rem;
+      border-radius: 100px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.15s;
+    }
+    .btn-primary:hover { background: var(--violet-dark); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--violet);
+      border: 1.5px solid var(--violet);
+      padding: 0.6rem 1.4rem;
+      border-radius: 100px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.15s;
+    }
+    .btn-outline:hover { background: var(--violet-light); }
+
+    /* ---- Hero ---- */
+    .hero {
+      padding: 5rem 2rem 3rem;
+      text-align: center;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, #ede9fe 0%, transparent 70%);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--amber-light);
+      color: #92400e;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.35rem 0.9rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 3.8rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      max-width: 700px;
+      margin: 0 auto 1.1rem;
+    }
+
+    .hero h1 .highlight { color: var(--violet); }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 500px;
+      margin: 0 auto 2rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 3.5rem;
+    }
+
+    /* Widget preview */
+    .widget-preview {
+      max-width: 340px;
+      margin: 0 auto;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      box-shadow: 0 24px 64px rgba(124, 58, 237, 0.14), 0 4px 16px rgba(0,0,0,0.06);
+      text-align: left;
+      position: relative;
+    }
+
+    .preview-dot-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 1.25rem;
+    }
+
+    .preview-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .preview-dot:nth-child(1) { background: #fca5a5; }
+    .preview-dot:nth-child(2) { background: #fde68a; }
+    .preview-dot:nth-child(3) { background: #86efac; }
+
+    .widget-creator {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .creator-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #c4b5fd, #7c3aed);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .creator-info h3 { font-size: 0.95rem; font-weight: 700; }
+    .creator-info p { font-size: 0.78rem; color: var(--muted); }
+
+    .widget-amounts {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .amount-btn {
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 0.55rem 0.4rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .amount-btn.selected {
+      border-color: var(--violet);
+      background: var(--violet-light);
+    }
+
+    .amount-btn .amount { font-weight: 800; font-size: 0.95rem; }
+    .amount-btn .alabel { font-size: 0.68rem; color: var(--muted); }
+
+    .widget-send {
+      width: 100%;
+      background: var(--violet);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.75rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 0.6rem;
+    }
+
+    .widget-foot {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    /* ---- Embed ---- */
+    .embed-section {
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 5rem 2rem;
+    }
+
+    .embed-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .embed-inner > .section-label,
+    .embed-inner > h2 {
+      text-align: center;
+    }
+
+    .embed-cols {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 3rem;
+      align-items: center;
+      margin-top: 3rem;
+    }
+
+    .embed-text h3 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .embed-text p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .code-block {
+      background: #1c1917;
+      color: #e7e5e4;
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.83rem;
+      line-height: 1.8;
+      overflow-x: auto;
+    }
+
+    .code-block .tag { color: #c4b5fd; }
+    .code-block .attr { color: #86efac; }
+    .code-block .val { color: #fde68a; }
+
+    /* ---- Section shared ---- */
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--violet);
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+
+    .section-heading {
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: -0.025em;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ---- Steps ---- */
+    .steps-section {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .step {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem 1.5rem;
+      text-align: left;
+    }
+
+    .step-number {
+      width: 40px;
+      height: 40px;
+      background: var(--violet-light);
+      color: var(--violet);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+    }
+
+    .step h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .step p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ---- Creator cards ---- */
+    .creators-section {
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+
+    .creators-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .creator-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-top: 3rem;
+      text-align: left;
+    }
+
+    .creator-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+    }
+
+    .creator-card-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .creator-card h3 {
+      font-size: 0.98rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .creator-card p {
+      font-size: 0.86rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ---- CTA ---- */
+    .cta-banner {
+      background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #a855f7 100%);
+      color: var(--white);
+      text-align: center;
+      padding: 5rem 2rem;
+    }
+
+    .cta-banner h2 {
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: -0.025em;
+      margin-bottom: 0.75rem;
+    }
+
+    .cta-banner p {
+      font-size: 1rem;
+      opacity: 0.85;
+      margin-bottom: 2rem;
+    }
+
+    .btn-amber {
+      background: var(--amber);
+      color: #1c1917;
+      border: none;
+      padding: 0.85rem 2.2rem;
+      border-radius: 100px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: opacity 0.15s;
+    }
+    .btn-amber:hover { opacity: 0.88; }
+
+    /* ---- Footer ---- */
+    footer {
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      padding: 1.75rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-logo { font-weight: 800; color: var(--violet); font-size: 0.95rem; }
+
+    footer small { font-size: 0.8rem; color: var(--muted); }
+
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { font-size: 0.8rem; color: var(--muted); text-decoration: none; }
+    .footer-links a:hover { color: var(--violet); }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 680px) {
+      .embed-cols { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; }
+      .creator-cards { grid-template-columns: 1fr; }
+      footer { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="#" class="nav-logo">TipJar</a>
+    <a href="https://github.com/bellabukss/tipjar" class="btn-primary">Get started</a>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">Built on Stellar</div>
+    <h1>The tip jar every <span class="highlight">creator</span> deserves</h1>
+    <p>Two lines of HTML. Your fans tip you in USDC. You receive it in your Stellar wallet in seconds, no platform cut, no monthly fee.</p>
+    <div class="hero-actions">
+      <a href="https://github.com/bellabukss/tipjar" class="btn-primary">Get your jar</a>
+      <a href="#how-it-works" class="btn-outline">See how it works</a>
     </div>
 
-    <script type="module" src="/widget.js"></script>
-  </body>
+    <div class="widget-preview">
+      <div class="preview-dot-row">
+        <div class="preview-dot"></div>
+        <div class="preview-dot"></div>
+        <div class="preview-dot"></div>
+      </div>
+      <div class="widget-creator">
+        <div class="creator-avatar">🎨</div>
+        <div class="creator-info">
+          <h3>Alex Rivera</h3>
+          <p>Designer and illustrator</p>
+        </div>
+      </div>
+      <div class="widget-amounts">
+        <div class="amount-btn">
+          <div class="amount">$1</div>
+          <div class="alabel">Coffee</div>
+        </div>
+        <div class="amount-btn selected">
+          <div class="amount">$5</div>
+          <div class="alabel">Snack</div>
+        </div>
+        <div class="amount-btn">
+          <div class="amount">$20</div>
+          <div class="alabel">Lunch</div>
+        </div>
+      </div>
+      <button class="widget-send">Send tip</button>
+      <p class="widget-foot">Powered by Stellar · USDC · Settles in seconds</p>
+    </div>
+  </section>
+
+  <!-- Embed -->
+  <section class="embed-section">
+    <div class="embed-inner">
+      <span class="section-label">Integration</span>
+      <h2 class="section-heading">Two lines. That is all.</h2>
+      <div class="embed-cols">
+        <div class="embed-text">
+          <h3>Drop it anywhere</h3>
+          <p>Load the script once, place the tag where you want the widget, and TipJar handles the rest. Works in any static site, Ghost blog, Notion embed, or custom web app.</p>
+        </div>
+        <div class="code-block">
+<span class="tag">&lt;script</span> <span class="attr">type</span>=<span class="val">"module"</span>
+  <span class="attr">src</span>=<span class="val">"https://cdn.tipjar.dev/widget.js"</span>
+<span class="tag">&gt;&lt;/script&gt;</span>
+
+<span class="tag">&lt;tip-jar</span>
+  <span class="attr">to</span>=<span class="val">"GABCD...XYZ"</span>
+  <span class="attr">suggested</span>=<span class="val">"1,5,20"</span>
+<span class="tag">&gt;&lt;/tip-jar&gt;</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Steps -->
+  <section class="steps-section" id="how-it-works">
+    <span class="section-label">How it works</span>
+    <h2 class="section-heading">From embed to payout in seconds</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Add the snippet</h3>
+        <p>Paste two lines into any page. Hugo, Ghost, Notion embed, or plain HTML. If it renders in a browser, TipJar works there.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Fan picks an amount</h3>
+        <p>They choose from your suggested amounts or type a custom one. One tap to confirm. No account required, no wallet install.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>USDC lands in your wallet</h3>
+        <p>Stellar settles in 3 to 5 seconds. Your balance updates before the fan even closes the tab.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Creator types -->
+  <section class="creators-section">
+    <div class="creators-inner">
+      <span class="section-label">Who uses TipJar</span>
+      <h2 class="section-heading">Built for every kind of creator</h2>
+      <div class="creator-cards">
+        <div class="creator-card">
+          <div class="creator-card-icon">🎙️</div>
+          <h3>Podcasters and streamers</h3>
+          <p>Drop the widget in your show notes or stream page. Let listeners tip during the episode, not after they hit a paywall on another platform.</p>
+        </div>
+        <div class="creator-card">
+          <div class="creator-card-icon">💻</div>
+          <h3>Open source developers</h3>
+          <p>Add a tip jar to your project README or docs site. Supporters can back your work in one tap without committing to a monthly subscription.</p>
+        </div>
+        <div class="creator-card">
+          <div class="creator-card-icon">✍️</div>
+          <h3>Writers and bloggers</h3>
+          <p>Put it at the bottom of every post. Readers who found your article useful can show it instantly, no clicks through to another platform.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-banner">
+    <h2>Your jar is empty. Fix that today.</h2>
+    <p>Free, open source, and lives entirely on-chain.</p>
+    <a href="https://github.com/bellabukss/tipjar" class="btn-amber">Get started on GitHub</a>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <span class="footer-logo">TipJar</span>
+    <small>One-tap tipping for creators on Stellar.</small>
+    <div class="footer-links">
+      <a href="https://github.com/bellabukss/tipjar">GitHub</a>
+      <a href="https://github.com/bellabukss/tipjar/blob/main/README.md">Docs</a>
+      <a href="https://github.com/bellabukss/tipjar/blob/main/LICENSE">MIT License</a>
+    </div>
+  </footer>
+
+</body>
 </html>
