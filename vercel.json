@@ -1,5 +1,5 @@
 {
-  "installCommand": "cd packages/widget && npm install --legacy-peer-deps",
-  "buildCommand": "cd packages/widget && npm run build",
-  "outputDirectory": "apps/demo"
+  "installCommand": "npm install --legacy-peer-deps",
+  "buildCommand": "npm run build && cp ../../apps/demo/index.html dist/",
+  "outputDirectory": "dist"
 }
