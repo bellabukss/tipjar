@@ -12,4 +12,5 @@ export interface TipJarConfig {
   message?: boolean;
   theme?: 'light' | 'dark' | 'auto';
   onTip?: (receipt: TipReceipt) => void;
+  onSuccess?: (receipt: TipReceipt) => void;
 }
