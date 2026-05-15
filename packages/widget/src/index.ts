@@ -1,5 +1,7 @@
 import { TipJarElement } from './tip-jar.js';
 
+export const VERSION = '0.1.0';
+
 export interface MountOptions {
   to: string;
   suggested?: number[];
