@@ -30,7 +30,7 @@ export interface TipReceipt {
 export function mount(target: string | HTMLElement, options: MountOptions): TipJarElement {
   const host = typeof target === 'string' ? document.querySelector(target) : target;
   if (!host) {
-    throw new Error(TipJar mount target not found: );
+    throw new Error(`TipJar mount target not found: ${String(target)}`);
   }
 
   const el = document.createElement('tip-jar') as TipJarElement;
