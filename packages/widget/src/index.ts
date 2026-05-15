@@ -1,5 +1,7 @@
 import { TipJarElement } from './tip-jar.js';
 
+export const VERSION = '0.1.0';
+
 export interface MountOptions {
   to: string;
   suggested?: number[];
@@ -28,7 +30,7 @@ export interface TipReceipt {
 export function mount(target: string | HTMLElement, options: MountOptions): TipJarElement {
   const host = typeof target === 'string' ? document.querySelector(target) : target;
   if (!host) {
-    throw new Error(`TipJar mount target not found: ${String(target)}`);
+    throw new Error(TipJar mount target not found: );
   }
 
   const el = document.createElement('tip-jar') as TipJarElement;
